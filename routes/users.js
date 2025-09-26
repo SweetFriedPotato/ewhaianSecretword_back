@@ -31,9 +31,9 @@ router.post('/register', async (req, res) => {
   if (!email.endsWith('@ewhain.net') && !email.endsWith('@ewha.ac.kr')) {
     return res.status(400).json({ message: '이화인 이메일로만 가입할 수 있습니다.' });
   }
-  if (secretWord !== '이화이언TF화이팅') { // 실제 비밀단어로 변경하세요.
-    return res.status(400).json({ message: '비밀단어가 일치하지 않습니다.' });
-  }
+  if (secretWord !== process.env.SECRET_WORD_FOR_REGISTER) {
+  return res.status(400).json({ message: '비밀단어가 일치하지 않습니다.' });
+  } 
 
   try {
     // ⭐️ 트랜잭션 시작
