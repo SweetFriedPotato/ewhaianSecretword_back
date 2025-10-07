@@ -14,7 +14,7 @@ router.get('/questions', auth, (req, res) => {
 
 // POST /api/quiz/submit (정답 제출 및 채점)
 router.post('/submit', auth, async (req, res) => {
-  const { answers } = req.body; // answers는 사용자가 제출한 답안 배열
+  const { answers, duration } = req.body; // answers는 사용자가 제출한 답안 배열, duration은 소요 시간(초)
   const userId = req.user.id;
 
   if (!Array.isArray(answers) || answers.length !== questions.length) {
@@ -32,10 +32,10 @@ router.post('/submit', auth, async (req, res) => {
 
   try {
     // 여러 번 제출 가능하도록 중복 체크 제거
-    // 결과 저장 - 매번 새로운 레코드 생성
+    // 결과 저장 - 매번 새로운 레코드 생성 (duration 포함)
     await pool.query(
-      'INSERT INTO quiz_results (user_id, score, answers) VALUES ($1, $2, $3)',
-      [userId, score, JSON.stringify(results)]
+      'INSERT INTO quiz_results (user_id, score, duration, answers) VALUES ($1, $2, $3, $4)',
+      [userId, score, duration || 0, JSON.stringify(results)]
     );
 
     res.status(200).json({ message: '제출 완료!', score, results });

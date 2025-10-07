@@ -164,4 +164,53 @@ router.post('/login', async (req, res) => {
 });
 
 
+// ## GET /api/users/me (현재 사용자 정보 조회) ##
+router.get('/me', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: '토큰이 필요합니다.' });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const result = await pool.query('SELECT id, email, nickname FROM users WHERE id = $1', [decoded.id]);
+    const user = result.rows[0];
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Get user info error:', error);
+    res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
+  }
+});
+
+// ## GET /api/users/records (사용자 퀴즈 기록 조회) ##
+router.get('/records', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: '토큰이 필요합니다.' });
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // 퀴즈 기록 조회 (최신순으로 정렬)
+    const result = await pool.query(
+      'SELECT id, score, duration, created_at FROM quiz_results WHERE user_id = $1 ORDER BY created_at DESC',
+      [decoded.id]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Get records error:', error);
+    res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
+  }
+});
+
 module.exports = router;
