@@ -31,18 +31,13 @@ router.post('/submit', auth, async (req, res) => {
   });
 
   try {
-    // 이전 제출 기록 확인
-    const existingResult = await pool.query('SELECT * FROM quiz_results WHERE user_id = $1', [userId]);
-    if (existingResult.rows.length > 0) {
-      return res.status(409).json({ message: '이미 퀴즈를 제출했습니다.' });
-    }
-
-    // 결과 저장
+    // 여러 번 제출 가능하도록 중복 체크 제거
+    // 결과 저장 - 매번 새로운 레코드 생성
     await pool.query(
       'INSERT INTO quiz_results (user_id, score, answers) VALUES ($1, $2, $3)',
       [userId, score, JSON.stringify(results)]
     );
-    
+
     res.status(200).json({ message: '제출 완료!', score, results });
   } catch (error) {
     console.error(error);

@@ -1,6 +1,6 @@
 // quizData.js
 const questions = [
-  { hint: 'ㅈㄱ:', answers: ['800'] },
+  { hint: 'ㅈㄱ', answers: ['800'] },
   { hint: 'ㄷㄱㄷ', answers: ['45', '대강당'] }, // 중복 힌트 통합
   { hint: 'Ecc엘베', answers: ['2'] },
   { hint: '유명한 4글자', answers: ['1886'] },
