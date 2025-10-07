@@ -12,6 +12,11 @@ router.get('/questions', auth, (req, res) => {
   res.json(hints);
 });
 
+// GET /api/quiz/total (총 문제 수 가져오기)
+router.get('/total', (req, res) => {
+  res.json({ total: questions.length });
+});
+
 // POST /api/quiz/submit (정답 제출 및 채점)
 router.post('/submit', auth, async (req, res) => {
   const { answers, duration } = req.body; // answers는 사용자가 제출한 답안 배열, duration은 소요 시간(초)
