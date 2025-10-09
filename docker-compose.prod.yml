@@ -3,9 +3,9 @@
 version: "3.9"
 
 services:
-  app: 
+  app:
     build: .
-    container_name: ewhaian-app 
+    container_name: ewhaian-app
     ports:
       - "3001:3001"
     restart: always
@@ -19,7 +19,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - ewha_network 
+      - ewha_network
 
   db:
     image: postgres:15
@@ -32,7 +32,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: always
     networks:
-      - ewha_network 
+      - ewha_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres || exit 1"]
       interval: 10s
@@ -45,5 +45,5 @@ volumes:
   postgres_data:
 
 networks:
-  ewha_network: 
-    driver: bridge 
+  ewha_network:
+    driver: bridge
