@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
     );
     const userId = newUser.rows[0].id;
 
-    // 5. [트랜잭션 작업 2] 이메일 인증 토큰 생성 및 메일 발송
+    // 5. [트랜잭션 작업 2] 이메일 인증 토큰 생성 및 메일 전송
     const verificationToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
     const verificationLink = `${process.env.SERVER_URL}/api/users/verify?token=${verificationToken}`;
 
