@@ -1,5 +1,4 @@
-# docker-compose.prod.yml (최종)
-
+# docker-compose.prod.yml (자동 테이블 생성 추가 버전)
 version: "3.9"
 
 services:
@@ -30,6 +29,7 @@ services:
       - .env.prod
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # ✅ 추가된 부분
     restart: always
     networks:
       - ewha_network
@@ -39,7 +39,6 @@ services:
       timeout: 5s
       retries: 10
       start_period: 20s
-
 
 volumes:
   postgres_data:
