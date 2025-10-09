@@ -36,9 +36,6 @@ docker-compose -f docker-compose.prod.yml ps
 ### 5. 서비스 접속
 - 백엔드 API: http://localhost:3001
 - PostgreSQL DB: localhost:5432
-  - User: postgres
-  - Password: postgres
-  - Database: mydb
 
 ### 6. 서비스 중지
 ```bash
