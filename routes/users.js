@@ -56,7 +56,7 @@ router.post('/register', async (req, res) => {
 
     // 5. [트랜잭션 작업 2] 이메일 인증 토큰 생성 및 메일 전송
     const verificationToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const verificationLink = `${process.env.SERVER_URL}/api/users/verify?token=${verificationToken}`;
+    const verificationLink = `http://121.131.184.229:3001/api/users/verify?token=${verificationToken}`;
 
     await transporter.sendMail({
       from: process.env.MAIL_USER,
