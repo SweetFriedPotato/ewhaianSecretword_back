@@ -17,6 +17,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: sh -c "node init_db.js && node index.js"  # ← 여기 추가
     networks:
       - ewha_network
 
