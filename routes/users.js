@@ -89,7 +89,7 @@ router.get('/verify', async (req, res) => {
     await pool.query('UPDATE users SET is_verified = TRUE WHERE id = $1', [decoded.userId]);
     
     // TODO: 인증 성공 시 프론트엔드의 특정 페이지로 리디렉션
-    res.redirect(`${process.env.FRONTEND_URL}/login`);
+    res.redirect(`http://121.131.184.229:3000/login`);
   } catch (error) {
     res.status(400).send('<h1>유효하지 않거나 만료된 인증 링크입니다.</h1>');
   }
