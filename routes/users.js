@@ -17,6 +17,50 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// ## POST /api/users/check-nickname (닉네임 중복 확인) ##
+router.post('/check-nickname', async (req, res) => {
+  const { nickname } = req.body;
+
+  if (!nickname) {
+    return res.status(400).json({ message: '닉네임을 입력해주세요.' });
+  }
+
+  try {
+    const result = await pool.query('SELECT id FROM users WHERE nickname = $1', [nickname]);
+    if (result.rows.length > 0) {
+      return res.status(200).json({ available: false, message: '이미 사용 중인 닉네임입니다.' });
+    }
+    res.status(200).json({ available: true, message: '사용 가능한 닉네임입니다.' });
+  } catch (error) {
+    console.error('Check nickname error:', error);
+    res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+  }
+});
+
+// ## POST /api/users/check-email (이메일 중복 확인) ##
+router.post('/check-email', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: '이메일을 입력해주세요.' });
+  }
+
+  if (!email.endsWith('@ewhain.net') && !email.endsWith('@ewha.ac.kr')) {
+    return res.status(400).json({ available: false, message: '이화여자대학교 이메일만 사용 가능합니다.' });
+  }
+
+  try {
+    const result = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (result.rows.length > 0) {
+      return res.status(200).json({ available: false, message: '이미 사용 중인 이메일입니다.' });
+    }
+    res.status(200).json({ available: true, message: '사용 가능한 이메일입니다.' });
+  } catch (error) {
+    console.error('Check email error:', error);
+    res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+  }
+});
+
 // ## POST /api/users/register (회원가입) ##
 router.post('/register', async (req, res) => {
   const { email, password, nickname, secretWord } = req.body;
