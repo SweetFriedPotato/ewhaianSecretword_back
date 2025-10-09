@@ -161,10 +161,9 @@ router.get('/records', async (req, res) => {
 
     const token = authHeader.substring(7);
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // 퀴즈 기록 조회 (최신순으로 정렬)
+
     const result = await pool.query(
-      'SELECT id, score, duration, created_at FROM quiz_results WHERE user_id = $1 ORDER BY created_at DESC',
+      'SELECT id, score, duration, answers, submitted_at FROM quiz_results WHERE user_id = $1 ORDER BY submitted_at DESC',
       [decoded.id]
     );
 
@@ -174,5 +173,6 @@ router.get('/records', async (req, res) => {
     res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
   }
 });
+
 
 module.exports = router;
