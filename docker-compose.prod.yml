@@ -1,24 +1,28 @@
+# docker-compose.prod.yml 
+
+version: "3.9"
+
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ewhaian-backend
+  app: 
+    build: .
+    container_name: ewhaian-app 
     ports:
       - "3001:3001"
     restart: always
-    env_file:
-      - .env.prod
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
+      - SECRET_WORD_FOR_REGISTER=${SECRET_WORD_FOR_REGISTER}
     depends_on:
       db:
-        condition: service_started
+        condition: service_healthy
     networks:
-      - backend-network
+      - ewha_network 
 
   db:
-    image: postgres:latest
+    image: postgres:15
     container_name: ewhaian-db
     ports:
       - "127.0.0.1:5432:5432"
@@ -28,9 +32,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: always
     networks:
-      - backend-network
+      - ewha_network 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -39,6 +43,5 @@ volumes:
   postgres_data:
 
 networks:
-  backend-network:
+  ewha_network: 
     driver: bridge
-
