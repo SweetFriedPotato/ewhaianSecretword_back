@@ -100,7 +100,7 @@ router.post('/register', async (req, res) => {
 
     // 5. [트랜잭션 작업 2] 이메일 인증 토큰 생성 및 메일 전송
     const verificationToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const verificationLink = `http://121.131.184.229:3001/api/users/verify?token=${verificationToken}`;
+    const verificationLink = `${process.env.FRONTEND_URL}/verify?token=${verificationToken}`;
 
     await transporter.sendMail({
       from: process.env.MAIL_USER,
@@ -133,7 +133,7 @@ router.get('/verify', async (req, res) => {
     await pool.query('UPDATE users SET is_verified = TRUE WHERE id = $1', [decoded.userId]);
     
     // TODO: 인증 성공 시 프론트엔드의 특정 페이지로 리디렉션
-    res.redirect(`http://121.131.184.229:3000/login`);
+    res.redirect(`${process.env.FRONTEND_URL}/login`);
   } catch (error) {
     res.status(400).send('<h1>유효하지 않거나 만료된 인증 링크입니다.</h1>');
   }
