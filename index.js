@@ -13,7 +13,11 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // 미들웨어 설정
-app.use(cors()); // CORS 허용
+const corsOptions = {
+  origin: ['http://ewhasecret.com', 'http://www.ewhasecret.com', 'https://ewhasecret.com', 'https://www.ewhasecret.com'], // 허용할 프론트엔드 도메인 목록
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json()); // JSON 요청 본문 파싱
 
 // API 라우트 설정
