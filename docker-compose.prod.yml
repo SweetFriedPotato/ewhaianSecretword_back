@@ -13,7 +13,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "node init_db.js && node index.js"  # ← 여기 추가
+    command: sh -c "node index.js"  # ← 여기 추가
     networks:
       - ewha_network
 
@@ -25,7 +25,7 @@ services:
     env_file:
       - .env.prod
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ewhaiansecretword_back_postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # ✅ 추가된 부분
     restart: always
     networks:
@@ -38,7 +38,8 @@ services:
       start_period: 20s
 
 volumes:
-  postgres_data:
+  ewhaiansecretword_back_postgres_data: # 👈 [수정 2] 여기도 통일
+    external: true # 👈 이미 docker run 등으로 만든 볼륨임을 명시
 
 networks:
   ewha_network:

@@ -1,0 +1,25 @@
+-- 테이블이 없을 경우에만 생성합니다.
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  nickname VARCHAR(100) UNIQUE NOT NULL,
+  is_verified BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS quiz_results (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  score INTEGER NOT NULL,
+  duration INTEGER DEFAULT 0,
+  answers JSONB,
+  submitted_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS quiz_scores (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  score INTEGER NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
