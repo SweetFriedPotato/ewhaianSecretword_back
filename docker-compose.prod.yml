@@ -39,7 +39,6 @@ services:
 
 volumes:
   ewhaiansecretword_back_postgres_data: # 👈 [수정 2] 여기도 통일
-    external: true # 👈 이미 docker run 등으로 만든 볼륨임을 명시
 
 networks:
   ewha_network:
